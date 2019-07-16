@@ -1,0 +1,69 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Liste des console de monitoring</h3></span>
+              <a role="button" class="btn btn-success" href="{{new_console_url}}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Nouvel console</span></a>
+              <a role="button" class="btn btn-success" href="{{view_console_url}}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true">Afficher les consoles</span></a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom</th>
+	                  <th>Location</th>
+	                  <th>Port</th>
+	                  <th>Chemin relatif</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for console in consoles %}
+		                <tr>
+		                  <td>{{console.name}}</td>
+		                  <td>{{console.location}}</td>
+		                  <td>{{console.port}}</td>
+		                  <td>{{console.path}}</td>
+		                  <td>
+		                  	<a role="button" class="btn btn-success" href="{{ url_for('console_agg_urls.update_console_handler', id_console=console.id) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Modifier</span></a> 
+							<a role="button" class="btn btn-danger" href="{{ url_for('console_agg_urls.delete_console_handler', id_console=console.id) }}" onclick="return confirm ('Voulez-vous vraiment supprimer cette élément ?'); "><span class="glyphicon glyphicon-trash" aria-hidden="true">Supprimer</span></a>
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  <th>Nom</th>
+		                  <th>Location</th>
+		                  <th>Port</th>
+		                  <th>Chemin relatif</th>
+		                  <th></th>
+		                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

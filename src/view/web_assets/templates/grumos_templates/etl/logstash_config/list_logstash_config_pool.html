@@ -1,0 +1,82 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Liste des pools de configuration Logstash</h3></span>
+              <a role="button" class="btn btn-success" href="{{new_config_pool_url}}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Nouveau pool</span></a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Addresse IP</th>
+	                  <th>Nom du pool</th>
+	                  <th>Commande Logstash</th>
+	                  <th>Repertoire du pool</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for pool in config_pools %}
+		                <tr>
+		                  <td>{{pool.etl_machine_address}}</td>
+		                  <td>{{pool.etl_pool_name}}</td>
+		                  <td>{{pool.etl_lauch_command}}</td>
+		                  <td>{{pool.etl_config_path_dir}}</td>
+		                  <td>
+		                  	<a role="button" class="btn btn-success" href="{{ url_for('logstash_config_urls.update_config_pool_handler', id_config_pool=pool.id) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Modifier</span></a> 
+		                  	<a role="button" class="btn btn-success" href="{{ url_for('logstash_config_urls.view_config_pool_handler', id_config_pool=pool.id) }}"><span class="glyphicon glyphicon-eye-open" aria-hidden="true">Voir</span></a> 
+							<a role="button" class="btn btn-success" href="{{ url_for('logstash_config_urls.start_config_pool_handler', id_config_pool=pool.id) }}"><span class="glyphicon glyphicon-play-circle" aria-hidden="true">Go</span></a>
+							<a role="button" class="btn btn-danger" href="{{ url_for('logstash_config_urls.delete_config_pool_handler', id_config_pool=pool.id) }}" onclick="return confirm ('Voulez-vous vraiment supprimer cette élément ?'); "><span class="glyphicon glyphicon-trash" aria-hidden="true">Supprimer</span></a>
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  	<th>Addresse IP</th>
+	                  		<th>Nom du pool</th>
+	                  		<th>Commande Logstash</th>
+	                  		<th>Repertoire du pool</th>
+	                  		<th></th>
+		                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          {% if launch_logstash_msg %}
+	          <div class="box">
+	          	<div class="box-header">
+	          		Résultat du lancement du pool
+	            </div>
+	            <div class="box-body">
+		          	<!--{% for line in launch_logstash_msg %}-->
+		          	<p>{{launch_logstash_msg}}</p>
+		          	<!--{% endfor %}-->
+		        </div>
+	          </div>
+	      {% endif %}
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

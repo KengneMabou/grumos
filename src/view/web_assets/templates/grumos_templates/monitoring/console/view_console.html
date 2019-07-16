@@ -1,0 +1,54 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Console de monitoring</h3></span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+            	<div id="tabs_wrapper">
+				  <ul class="nav nav-tabs" role="tablist" id="consoles_tabs">
+				  	{% for console in consoles %}
+				    	<li role="presentation"><a role="tab" aria-controls="{{console.name}}" data-toggle="tab" href="#{{console.name}}">{{console.name}}</a></li>
+				    {% endfor %}
+				  </ul>
+				  <div class="tab-content">
+				  	{% for console in consoles %}
+				    	<div role="tabpanel" class="tab-pane" id="{{console.name}}" data-src="{{console.full_url}}">
+				    		<iframe style="width:100%; height:1000px;" src="{{console.full_url}}"></iframe>
+				    	</div>
+				    {% endfor %}
+				  </div>
+				</div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script>
+$('#consoles_tabs_test').bind('show', function(e) {  
+
+    // identify the tab-pane
+    paneID = $(e.target).attr('href');
+
+    // get the value of the custom data attribute to use as the iframe source
+    src = $(paneID).attr('data-src');
+
+    //if the iframe on the selected tab-pane hasn't been loaded yet...
+    if($(paneID+" iframe").attr("src")=="")
+    {
+        // update the iframe src attribute using the custom data-attribute value
+        $(paneID+" iframe").attr("src",src);
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "admin_lte/index.html" %}
+
+
+
+{% block content %}
+          <div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	           <p>Vous n'avez pas les droits suffisants pour accéder à cette section ou éffectuer cette action</p>
+				<a href="{{ url_for('auth_urls.console_index_handler') }}" class="logo">
+			      <!-- mini logo for sidebar mini 50x50 pixels -->
+			      <span class="logo-mini"><b>Retour à l'application GRUMOS</b></span>
+			      <!-- logo for regular state and mobile devices -->
+			      <span class="logo-lg"><b>Retour à l'application GRUMOS</b></span>
+			    </a>		  
+		  </div>
+        
+{% endblock %}
+

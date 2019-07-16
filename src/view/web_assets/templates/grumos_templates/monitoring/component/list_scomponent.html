@@ -1,0 +1,62 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Liste des Services applicatifs monitorés</h3></span>
+              <a role="button" class="btn btn-success" href="{{new_scomponent_url}}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Nouveau service</span></a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom</th>
+	                  <th>Description</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for component in components%}
+		                <tr>
+		                  <td>{{component.name}}</td>
+		                  <td>{{component.description}}</td>
+		                  <td>
+		                  	<a role="button" class="btn btn-success" href="{{ url_for('scomponent_urls.update_scomponent_handler', id_component=component.id) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Modifier</span></a> 
+							<a role="button" class="btn btn-danger" href="{{ url_for('scomponent_urls.delete_scomponent_handler', id_component=component.id) }}" onclick="return confirm ('Voulez-vous vraiment supprimer cette élément ?'); "><span class="glyphicon glyphicon-trash" aria-hidden="true">Supprimer</span></a>
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  <th>Nom</th>
+		                  <th>Description</th>
+		                  <th></th>
+		                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

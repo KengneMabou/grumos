@@ -1,0 +1,110 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/select2/select2.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+<div style="display: none;">sec_config_pool_form</div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+              		{% if update_mode %}
+   						Mise à jour du pool de configuration SEC
+   						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">sec_config_pool_form_update</div>
+  					{% else %}
+  						Nouveau pool de configuration SEC
+  						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">sec_config_pool_form_new</div>
+  					{% endif %}
+  					
+              </h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="{{ destination_url }}">
+              <div class="box-body">
+              	<div style="margin-left: 15px;"class="form-group">
+                    {% for key,value in error.iteritems()  %}
+                    	<div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        		<p>{{value}}</p>
+		        		</div>
+		        	{% endfor %}
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_machine_address" class="col-sm-2 control-label">Adresse IP</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_machine_address" class="form-control" value="{{sec_machine_address}}" id="input_sec_machine_address" placeholder="Adresse du serveur SSH dela machine SEC">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_machine_username" class="col-sm-2 control-label">Nom d'utilisateur</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_machine_username" class="form-control" value="{{sec_machine_username}}" id="input_sec_machine_username" placeholder="Nom d'utilisateur sur la machine ssh">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_machine_password" class="col-sm-2 control-label">Mot de passe</label>
+                  <div class="col-sm-10">
+                    <input type="password" name="sec_machine_password" class="form-control" value="{{sec_machine_password}}" id="input_sec_machine_password" placeholder="Mot de passe">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_machine_rsa_ssh_key" class="col-sm-2 control-label">Clé publique RSA SSH du serveur sec</label>
+                  <div class="col-sm-10">
+                    <textarea name="sec_machine_rsa_ssh_key" class="form-control" rows="3">{{sec_machine_rsa_ssh_key}}</textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_pool_name" class="col-sm-2 control-label">Nom du pool</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_pool_name" class="form-control" value="{{sec_pool_name}}" id="input_sec_pool_name" placeholder="Nom du pool de configuration">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_input_file" class="col-sm-2 control-label">Chemin du fichier de données à correler</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_input_file" class="form-control" value="{{sec_input_file}}" id="input_sec_input_file" placeholder="Chemin absolu du fichier de données à correler">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_exec_file" class="col-sm-2 control-label">Chemin du fichier exécutable SEC</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_exec_file" class="form-control" value="{{sec_exec_file}}" id="input_sec_exec_file" placeholder="Chemin absolu du fichier exécutable SEC">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_sec_config_files_path" class="col-sm-2 control-label">Repertoire du pool</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="sec_config_files_path" class="form-control" value="{{sec_config_files_path}}" id="input_sec_config_files_path" placeholder="Chemin absolu vers le repertoire du pool">
+                  </div>
+                </div>
+                
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="reset" class="btn btn-default">Annuler</button>
+                <button type="submit" class="btn btn-info pull-right">Valider</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+{% endblock %}
+
+{% block js_footer %}
+
+	<script src="/plugins/select2/select2.full.min.js"></script>
+
+	<script>
+	  $(function () {
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+	    });
+	</script>
+
+{% endblock %}

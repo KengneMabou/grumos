@@ -1,0 +1,109 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/select2/select2.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+<div style="display: none;">user_form</div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+              		{% if update_mode %}
+   						Mise à jour de l'utilisateur
+   						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">user_form_update</div>
+  					{% else %}
+  						Nouvel utilisateur
+  						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">user_form_new</div>
+  					{% endif %}
+  					
+              </h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="{{ destination_url }}">
+              <div class="box-body">
+              	<div style="margin-left: 15px;"class="form-group">
+                    {% for key,value in error.iteritems()  %}
+                    	<div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        		<p>{{value}}</p>
+		        		</div>
+		        	{% endfor %}
+                </div>
+                <div class="form-group">
+                  <label for="inputName" class="col-sm-2 control-label">Nom</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="name" class="form-control" value="{{name}}" id="inputName" placeholder="Nom de l'utilisateur">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputSurname" class="col-sm-2 control-label">Prénom</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="surname" class="form-control" value="{{surname}}" id="inputSurname" placeholder="Prénom de l'utilisateur">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                  <div class="col-sm-10">
+                    <input type="email" name="email" class="form-control" value="{{email}}" id="inputEmail" placeholder="Email de l'utilisateur">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputLogin" class="col-sm-2 control-label">Login</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="login" class="form-control" value="{{login}}" id="inputLogin" placeholder="Login de l'utilisateur">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
+                  <div class="col-sm-10">
+                    <input type="password" name="password" class="form-control" value="{{password}}" id="inputPassword" placeholder="Mot de passe">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
+                  <div class="col-sm-10">
+                    <input type="password" name="passwordBis" class="form-control" value="{{password}}" id="inputPassword" placeholder="Confirmer Mot de passe">
+                  </div>
+                </div>
+                {% if profile %}
+	                <div class="form-group">
+	                  <label for="inputProfile" class="col-sm-2 control-label">Profile</label>
+	                  <div class="col-sm-10">
+			                 <select name ="profile" class="form-control select2" style="width: 100%;">
+			                 	{% for key,value in list_profiles.iteritems()  %}
+			                 		<option value = "{{key}}" {% if profile == key %} selected="selected" {% endif %}>{{value}}</option>
+			                 	{% endfor %}
+			                 </select>
+	                  </div>
+	                </div>
+	             {% endif %}
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="reset" class="btn btn-default">Annuler</button>
+                <button type="submit" class="btn btn-info pull-right">Valider</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+{% endblock %}
+
+{% block js_footer %}
+
+	<script src="/plugins/select2/select2.full.min.js"></script>
+
+	<script>
+	  $(function () {
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+	    });
+	</script>
+
+{% endblock %}

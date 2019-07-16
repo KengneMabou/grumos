@@ -1,0 +1,63 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Liste des composants matériels archivés</h3></span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom</th>
+	                  <th>Adresse IP</th>
+	                  <th>Etat</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for component in components%}
+		                <tr>
+		                  <td>{{component.name}}</td>
+		                  <td>{{component.address}}</td>
+		                  <td>{{component.state}}</td>
+		                  <td>
+		                  	<a role="button" class="btn btn-success" href="{{url_for('hcomponent_urls.restore_hcomponent_handler', id_component=component.id) }}" onclick="return confirm ('Voulez-vous vraiment restorer cet élément ?'); "><span class="glyphicon glyphicon-folder-open" aria-hidden="true">Restaurer</span></a> 
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  <th>Nom</th>
+		                  <th>Adresse IP</th>
+		                  <th>Etat</th>
+		                  <th></th>
+		                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

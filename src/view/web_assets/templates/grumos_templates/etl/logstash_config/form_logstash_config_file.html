@@ -1,0 +1,74 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/select2/select2.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+<div style="display: none;">logstash_config_file_form</div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+              		{% if update_mode %}
+   						Mise à jour du fichier de configuration logstash
+   						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">logstash_config_file_form_update</div>
+  					{% else %}
+  						Nouveau fichier de configuration logstash
+  						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">logstash_config_file_form_new</div>
+  					{% endif %}
+  					
+              </h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="{{ destination_url }}">
+              <div class="box-body">
+              	<div style="margin-left: 15px;"class="form-group">
+                    {% for key,value in error.iteritems()  %}
+                    	<div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        		<p>{{value}}</p>
+		        		</div>
+		        	{% endfor %}
+                </div>
+                <div class="form-group">
+                  <label for="input_etl_config_file" class="col-sm-2 control-label">Nom du fihier de configuration</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="etl_config_file" class="form-control" value="{{etl_config_file}}" id="input_etl_config_file" placeholder="Nom du fichier de configuration logstash ">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="input_draft_config" class="col-sm-2 control-label">Configuration</label>
+                  <div class="col-sm-10">
+                    <textarea name="draft_config" class="form-control" rows="20">{{draft_config}}</textarea>
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="reset" class="btn btn-default">Annuler</button>
+                <button type="submit" class="btn btn-info pull-right">Valider</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+{% endblock %}
+
+{% block js_footer %}
+
+	<script src="/plugins/select2/select2.full.min.js"></script>
+
+	<script>
+	  $(function () {
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+	    });
+	</script>
+
+{% endblock %}

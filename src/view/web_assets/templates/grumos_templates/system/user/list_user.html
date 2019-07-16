@@ -1,0 +1,71 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Liste des utilisateurs</h3></span>
+              <a role="button" class="btn btn-success" href="{{new_user_url}}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Nouvel utilisateur</span></a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_users" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom</th>
+	                  <th>Prénom</th>
+	                  <th>Email</th>
+	                  <th>Login</th>
+	                  <th>Profile</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for user in users %}
+		                <tr>
+		                  <td>{{user.name}}</td>
+		                  <td>{{user.surname}}</td>
+		                  <td>{{user.email}}</td>
+		                  <td>{{user.login}}</td>
+		                  <td>{{user.profile}}</td>
+		                  <th>
+		                  	<a role="button" class="btn btn-success" href="{{ url_for('user_urls.update_user_handler', id_user=user.id) }}"><span class="glyphicon glyphicon-pencil" aria-hidden="true">Modifier</span></a> 
+							<a role="button" class="btn btn-danger" href="{{ url_for('user_urls.delete_user_handler', id_user=user.id) }}" onclick="return confirm ('Voulez-vous vraiment supprimer cette élément ?'); "><span class="glyphicon glyphicon-trash" aria-hidden="true">Supprimer</span></a>
+						  </th>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  <th>Nom</th>
+		                  <th>Prénom</th>
+		                  <th>Email</th>
+		                  <th>Login</th>
+		                  <th>Profile</th>
+		                  <th></th>
+		                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_users").DataTable();
+	  });
+	</script>
+
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/select2/select2.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Don't delete; for unit tests -->
+<div style="display: none;">incident_form</div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+              		{% if update_mode %}
+   						Mise à jour de l'incident
+   						<!-- Don't delete; for unit tests -->
+						<div style="display: none;">incident_form_update</div>
+  					{% else %}
+  						Nouveau incident 
+  						<!-- Don't delete; for unit tests -->
+						<div style="display: none;">incident_form_new</div>
+  					{% endif %}
+  					
+              </h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="{{ destination_url }}">
+              <div class="box-body">
+              	<div style="margin-left: 15px;"class="form-group">
+                    {% for key,value in error.iteritems()  %}
+                    	<div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        		<p>{{value}}</p>
+		        		</div>
+		        	{% endfor %}
+                </div>
+                <div class="form-group">
+                  <label for="inputName" class="col-sm-2 control-label">Nom</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="name" class="form-control" value="{{name}}" id="inputName" placeholder="Nom du incident">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_incident_date" class="col-sm-2 control-label">Date de l'incident</label>
+                  <div class="col-sm-10">
+                    <input type="text" data-provide="datepicker" data-date-format="dd/mm/yyyy" name="incident_date" class="form-control" value="{{incident_date}}" id="input_incident_date" placeholder="Date de l'incident">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_incident_type" class="col-sm-2 control-label">Type de incident</label>
+                  <div class="col-sm-10">
+                     <select name ="incident_type" id="input_incident_type" class="form-control select2">      	
+				        	{% for value in list_incident_type %}
+				        		<option value = "{{value}}" {% if incident_type == value %} selected="selected" {% endif %}>{{value}}</option>
+				        	{% endfor %}
+				      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_machines_impacted" class="col-sm-2 control-label">Machines impactées</label>
+                  <div class="col-sm-10">
+                     <select name ="machines_impacted" id="input_machines_impacted" class="form-control select2" {% if update_mode == False %} multiple {% endif %}>      	
+				        	{% for value in list_machines%}
+				        		<option value = "{{value}}" {% if value in machines_impacted %} selected="selected" {% endif %}>{{value}}</option>
+				        	{% endfor %}
+				      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input_services_impacted" class="col-sm-2 control-label">Services applicatifs impactés</label>
+                  <div class="col-sm-10">
+                     <select name ="services_impacted" id="input_services_impacted" class="form-control select2" multiple>      	
+				        	{% for value in list_services %}
+				        		<option value = "{{value}}" {% if value in services_impacted %} selected="selected" {% endif %}>{{value}}</option>
+				        	{% endfor %}
+				      </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="input_gravity" class="col-sm-2 control-label">Gravité de l'incident</label>
+                  <div class="col-sm-10">
+                     <select name ="gravity" id="input_gravity" class="form-control select2">      	
+				        	{% for value in list_gravity %}
+				        		<option value = "{{value}}" {% if value == gravity %} selected="selected" {% endif %}>{{value}}</option>
+				        	{% endfor %}
+				      </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="input_state" class="col-sm-2 control-label">Etat de l'incident</label>
+                  <div class="col-sm-10">
+                     <select name ="state" id="input_state" class="form-control select2">      	
+				        	{% for value in list_state %}
+				        		<option value = "{{value}}" {% if value == state %} selected="selected" {% endif %}>{{value}}</option>
+				        	{% endfor %}
+				      </select>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="input_resolution_date" class="col-sm-2 control-label">Date de résolution de l'incident</label>
+                  <div class="col-sm-10">
+                    <input type="text" data-provide="datepicker" data-date-format="dd/mm/yyyy" name="resolution_date" class="form-control" value="{{resolution_date}}" id="input_resolution_date" placeholder="Date de résolution de l'incident">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                	<div class="col-sm-offset-2 col-sm-10">
+		                <div class="checkbox">
+						    <label>
+						      <input name = "confirm" type="checkbox" {% if confirm %} checked{% endif %}> Confirmer l'incident
+						    </label>
+						</div>
+					</div>
+				</div>
+                
+                <div class="form-group">
+                  <label for="input_desc" class="col-sm-2 control-label">Description de l'incident</label>
+                  <div class="col-sm-10">
+                    <textarea name="description" class="form-control" rows="3">{{description}}</textarea>
+                  </div>
+                </div>
+                
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="reset" class="btn btn-default">Annuler</button>
+                <button type="submit" class="btn btn-info pull-right">Valider</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+{% endblock %}
+
+{% block js_footer %}
+
+	<script src="/plugins/select2/select2.full.min.js"></script>
+	<script>
+	  $(function () {
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+	    });
+	</script>
+	
+	 <!-- <script>
+		  $( function() {
+		  	var datepicker = $.fn.datepicker.noConflict();
+			$.fn.bootstrapDP = datepicker; 
+		    $( "#input_incident_date" ).datepicker();
+		  } );
+  	  </script> -->
+
+{% endblock %}

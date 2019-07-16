@@ -1,0 +1,14 @@
+*.pyc
+*.pyo
+.installed.cfg
+bin
+develop-eggs
+dist
+downloads
+eggs
+parts
+src/*.egg-info
+virtual_env
+wheels
+application/*.pyc
+application/*.pyo

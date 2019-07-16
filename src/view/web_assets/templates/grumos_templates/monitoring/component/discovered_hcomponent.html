@@ -1,0 +1,110 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/select2/select2.min.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+<div style="display: none;">discover_comp_form</div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">
+              		{% if update_mode %}
+   						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">discover_comp_form_update</div>
+  					{% else %}
+  						Découverte automatique de machines
+  						<!-- Ne pas suppimer; pour les besoins des tests unitaires -->
+						<div style="display: none;">discover_comp_form_new</div>
+  					{% endif %}
+  					
+              </h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="{{ destination_url }}">
+              <div class="box-body">
+              	<div style="margin-left: 15px;"class="form-group">
+                    {% for key,value in error.iteritems()  %}
+                    	<div class="alert alert-danger alert-dismissible col-sm-10" role="alert">
+	                    	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        		<p>{{value}}</p>
+		        		</div>
+		        	{% endfor %}
+                </div>
+                <div class="form-group">
+                  <label for="inputIP" class="col-sm-2 control-label">Plage IP à scanner</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="ip_range" class="form-control" value="{{ip_range}}" id="inputIP" placeholder="Plage IP à scanner (notation Nmap)">
+                  </div>
+                </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="reset" class="btn btn-default">Annuler</button>
+                <button type="submit" class="btn btn-info pull-right">Valider</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+            <span><h3 class="box-title">Liste des composants découverts</h3></span>
+            <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom</th>
+	                  <th>Adresse MAC</th>
+	                  <th>Adresse IP</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for ref,component in components.iteritems()%}
+		                <tr>
+		                  <td>{{component.name}}</td>
+		                  <td>{{component.address}}</td>
+		                  <td>{{component.mac}}</td>
+		                  <td>
+		                  	{% if not component.is_in_db %}
+		                  		<a role="button" class="btn btn-success" href="{{ url_for('hcomponent_urls.add_discovered_hcomponent_handler', ref_component=ref) }}"><span class="glyphicon glyphicon-plus" aria-hidden="true">Ajouter au monitoring</span></a>
+		                  	{% else %}
+  									Déja présent dans la base des équipements monitorés
+  							{% endif %} 
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+	                	<tr>
+		                  <th>Nom</th>
+		                  <th>Adresse MAC</th>
+		                  <th>Adresse IP</th>
+		                  <th></th>
+		                </tr>
+                </tfoot>
+              </table>
+          </div>
+{% endblock %}
+
+{% block js_footer %}
+
+	<script src="/plugins/select2/select2.full.min.js"></script>
+	<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+	<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+	<script>
+	  $(function () {
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+	    });
+	</script>
+	
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Cause racine de l'incident: <strong>{{root_causes["incident_name"]}}</strong></h3></span><span>  </span>	
+              <hr>
+              <form class="form-inline" method="post" action="{{ root_cause_url }}">
+                <div class="form-group">
+                 <label for="timedelta" class="col-sm-4 control-label">Temps de recherche</label>
+                 <div class="col-sm-6">
+                    <input type="text" name="timedelta" class="form-control" value="{{name}}" id="timedelta" placeholder="Intervalle de temps de recherche en séconde (3600 seconde soit 1 heure par défaut)">
+                  </div>
+			    </div>
+			      <button type="submit" class="btn btn-info">Valider</button>
+              </form>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="grumos_data_tables_1" class="table table-bordered table-striped">
+              	<caption>Incidents</caption>
+                <thead>
+	                <tr>
+	                  <th>Nom du incident</th>
+	                  <!--<th>Description</th>-->
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type d'incident</th>
+	                  <th>Date de l'incident</th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for incident in root_causes["incident_cause"] %}
+		                <tr>
+		                  <td>{{incident.name}}</td>
+		                  <!--<td>{{incident.description}}</td>-->
+		                  <td>
+		                  		{% for mi in incident.machines_impacted %}
+		                  			<p>{{mi}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                   <td>
+		                  		{% for si in incident.services_impacted %}
+		                  			<p>{{si}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                  <td>{{incident.incident_type}}</td>
+		                  <td>{{incident.incident_date}}</td>
+		               </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+ 					<tr>
+	                  <th>Nom de l'incident</th>
+	                  <!--<th>Description</th>-->
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type d'incident</th>
+	                  <th>Date de l'incident</th>
+	                </tr>
+                </tfoot>
+              </table>
+	          <table id="grumos_data_tables_2" class="table table-bordered table-striped">
+	          	<caption>Changements</caption>
+                <thead>
+	                <tr>
+	                  <th>Nom du changement</th>
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type de changement</th>
+	                  <th>Date de changement</th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for change in root_causes["change_cause"] %}
+		                <tr>
+		                  <td>{{change.name}}</td>
+		                  <td>
+		                  		{% for mi in change.machines_impacted %}
+		                  			<p>{{mi}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                   <td>
+		                  		{% for si in change.services_impacted %}
+		                  			<p>{{si}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                  <td>{{change.change_type}}</td>
+		                  <td>{{change.change_date}}</td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+ 					<tr>
+	                  <th>Nom du changement</th>
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type de changement</th>
+	                  <th>Date du changement</th>
+	                </tr>
+                </tfoot>
+              </table>
+              <table id="grumos_data_tables_3" class="table table-bordered table-striped">
+              	<caption>Problèmes</caption>
+                <thead>
+	                <tr>
+	                  <th>Nom du problème</th>
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type de problème</th>
+	                  <th>Date du problème</th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for problem in root_causes["problem_cause"] %}
+		                <tr>
+		                  <td>{{problem.name}}</td>
+		                  <!--<td>{{problem.description}}</td>-->
+		                  <td>
+		                  		{% for mi in problem.machines_impacted %}
+		                  			<p>{{mi}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                   <td>
+		                  		{% for si in problem.services_impacted %}
+		                  			<p>{{si}}</p>
+		                  		{% endfor %}
+		                  </td>
+		                  <td>{{problem.problem_type}}</td>
+		                  <td>{{problem.problem_date}}</td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+ 					<tr>
+	                  <th>Nom de l'problem</th>
+	                  <th>Machines impactées</th>
+	                  <th>Services impactées</th>
+	                  <th>Type de problème</th>
+	                  <th>Date du problème</th>
+	                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#grumos_data_tables_1").DataTable();
+	  });
+	  $(function () {
+	    $("#grumos_data_tables_2").DataTable();
+	  });
+	  $(function () {
+	    $("#grumos_data_tables_3").DataTable();
+	  });
+	</script>
+
+{% endblock %}

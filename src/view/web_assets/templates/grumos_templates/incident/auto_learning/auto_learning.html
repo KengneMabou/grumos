@@ -1,0 +1,39 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Actions du moteur d'apprentissage</h3></span>
+              <a role="button" class="btn btn-success" href="{{model_fitting_url}}"><span class="glyphicon glyphicon-wrench" aria-hidden="true">Construction du modèle prédictif</span></a>
+              <a role="button" class="btn btn-warning" href="{{incident_detection_url}}"><span class="glyphicon glyphicon-eye-close" aria-hidden="true">Détection d'incident</span></a>
+              <a role="button" class="btn btn-success" href="{{incident_clustering_url}}"><span class="glyphicon glyphicon-th-large" aria-hidden="true">Clustering</span></a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+             	<div class="alert alert-success alert-dismissible col-sm-10" role="alert">
+	            	<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <p>{{fitting_message}}</p>
+		        </div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}

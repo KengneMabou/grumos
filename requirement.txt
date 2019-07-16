@@ -1,0 +1,16 @@
+setuptools
+jinja2
+flask
+flask-script
+mongoengine
+blinker
+mongomock
+tox
+flask_mongoengine
+paramiko
+plumbum
+celery
+fabric
+shell
+python-nmap
+scikit-learn

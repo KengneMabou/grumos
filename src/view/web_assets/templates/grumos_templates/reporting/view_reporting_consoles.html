@@ -1,0 +1,49 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Reporting</h3></span>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+            	<div id="consoles_tabs">
+				  <ul class="nav nav-tabs" role="tablist">
+				  	{% for console in consoles %}
+				    	<li role="presentation" role="tab" aria-controls="{{console["name"]}}" data-toggle="tab"><a href="#{{console["name"]}}">{{console["name"]}}</a></li>
+				    {% endfor %}
+				  </ul>
+				  <div class="tab-content">
+				  	{% for console in consoles %}
+				    	<div style="height:1000px;" role="tabpanel" class="tab-pane active" id="{{console.name}}"><iframe style="width:100%; height:1000px;" src="{{console.full_url}}" name="{{console.name}}"></iframe></div>
+				    {% endfor %}
+				  </div>
+				  
+				</div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+  <script>
+	  $( function() {
+	    $( "#tabs" ).tabs({
+	      beforeLoad: function( event, ui ) {
+	        ui.jqXHR.fail(function() {
+	          ui.panel.html(
+	            "Couldn't load this tab. We'll try to fix this as soon as possible. " +
+	            "If this wouldn't be a demo." );
+	        });
+	      }
+	    });
+	  } );
+  </script>
+ 
+{% endblock %}

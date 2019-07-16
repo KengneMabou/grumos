@@ -1,0 +1,91 @@
+## Procédure d'installation sur un système Ubuntu Linux 14.04.
+## Nous supposons le système d'exploitation déjà installé et que vous posséder un compte disposant des privilèges d'administration
+
+#Procédure d'installation de la machine hébergeant le moteur d'hypervision
+
+$ sudo apt-get update
+$ sudo apt-get install python2.7 # installation du langage et l'environnement d'execution python 2.7
+$ sudo apt-get install python-pip python-setuptools python-wheel
+$ sudo apt-get install pip install -u pip setuptools wheel
+$ sudo pip install virtualenv
+$ sudo apt-get install mongodb
+$ sudo apt-get install openssh-server openssh-sftp-server
+$ sudo add-apt-repository ppa:openjdk-r/ppa
+$ sudo apt-get update
+$ sudo apt-get install openjdk-8-jdk
+
+#installation d'influxdb.Veuillez télécharger les fichier .deb du logiciel sur le site du projet influxdb (influxdata.com) et placer le dans un répertoire au choix. Placer vous dans ce répertoire et taper la commande suivante(le nom du fichier téléchargé peut changer en fonction de la version de l'archive télécharger):
+
+$ sudo dpkg -i influxdb_1.0.2_amd64.deb
+
+#installation de grafana. 
+Veuillez télécharger les fichier .deb du logiciel sur le site du projet grafana (grafana.org) et placer le dans un répertoire au choix.
+Placer vous dans ce répertoire et taper la commande suivante (le nom du fichier téléchargé peut changer en fonction de la version de l'archive télécharger):
+
+$ sudo dpkg -i grafana_3.1.1-1470047149_amd64.deb
+
+# installation de logstash: Veuillez entrez la ligne qui suit dans votre fichier /etc/apt/sources.list
+
+deb https://packages.elastic.co/logstash/2.3/debian stable main
+
+# taper suite les commande suivante
+
+$ sudo apt-get update
+$ sudo apt-get install logstash
+
+# Création de l'environnement virtual python d'éxécution. Placer vous dans un répertoire de votre choix (de préférence un dont vous êtes le proprietaire
+
+$ mkdir grumos-env
+$ virtualenv grumos-env
+$ source grumos-env/bin/activate
+
+# A présent placez vous dans le repertoire de code source de l'application et entrez les commandes
+
+$ sudo pip install -r requirement.txt
+
+# Ouvrez le fichier de configuration de mongodb (/etc/mongod.conf). Sous la section 'net' configurer l'adresse IP (option 'bindIP') à 0.0.0.0 (écoute de toutes les connexions entrantes sur toutes les interfaces). Vous pouvez au besoin changer aussi le port d'écoute (option 'Port') qui par éfaut est à 27017.
+
+# lancer avec la commande suivante (en supposant que vous êtes dans le repertoire ou se trouve le fichier de configuration de sec ainsi que le fichier de donnée à consommer tel qu'indiquer dans le fichier de configuration de logstash (le fichier grumos_logstash.conf se trouvant dans le dossier /configs/logstash_assets). Le fichier de configuration de sec ("grumos_rules.conf") se trouve dans le dossier ./configs/sec_assets/)
+
+$ sec --conf=grumos_rules.conf --input=secdata --fromstart --log=sec.log --bufsize=1
+
+
+# Démarrage des services: Veuiller adapter les directives IP des fichier de configuration 'collectd.conf', 'grumos_logstash.conf' à votre contexte. Pour logstash Nous supposons que vous êtes dans le repertoire où se trouve le fichier de configuration.
+
+$ sudo service grafana-server start
+$ sudo service mongod
+$ sudo logstash --debug -f grumos_logstash.conf
+
+# configuration de influxdb: configuration des retention sur influxdb. Lancez le client de influxdb en tapant la commande suivante:
+
+$ influx
+
+# Entrez les commandes suivantes
+
+$ create database grumos
+$ CREATE RETENTION POLICY "two_days" ON "grumos" DURATION 48h REPLICATION 1 DEFAULT
+$ CREATE RETENTION POLICY "week" ON "grumos" DURATION 1w REPLICATION 1
+$ CREATE RETENTION POLICY "month" ON "grumos" DURATION 4w REPLICATION 1
+$ CREATE RETENTION POLICY "semestrial" ON "grumos" DURATION 12w REPLICATION 1
+$ CREATE CONTINUOUS QUERY "cq_one_min" ON "grumos" BEGIN SELECT mean("value") as "value" INTO "week".:MEASUREMENT FROM /.*/ GROUP BY time(1m) END
+$ CREATE CONTINUOUS QUERY "cq_month" ON "grumos" BEGIN SELECT mean("value") as "value" INTO "month".:MEASUREMENT FROM /.*/ GROUP BY time(5m) END
+$ CREATE CONTINUOUS QUERY "cq_semestrial" ON "grumos" BEGIN SELECT mean("value") as "value" INTO "semestrial".:MEASUREMENT FROM /.*/ GROUP BY time(10m) END
+
+
+#lancement de l'application: placez vous à la racine du repertoire de l'application et tapez la commande ci-dessous. Pour acceder à l'interface de l'application ouvrez le navigateur et pointer sur l'adresse IP de la machine hébergeant cette derniere sur le port 5000.
+
+$ sudo "chemin_vers_env_virtuel"/grumos-env/bin/python application/manager.py runserver
+
+# lancement du moteur d'analyse par machine learning grâce à celery: tapez les commandes suivantes
+
+$ cd ./src/logic/incident/automatic_learning
+$ "chemin_vers_env_virtuel"/grumos-env/bin/bin/celery -A celery_learning_tasks worker -B --loglevel=info
+
+#Procédure d'installation de la machine à hyperviser. Nous supposons que cette machine est doté d'un système ubuntu 14.04. Sa configuration doit être comme celle présente dans le fichier collectd.conf présent dans le fichier zip de l'application dans le dossier ./configs. Sur votre système le fichier de configuration de collectd se trouve à /etc/collecd/collectd.conf
+
+$ sudo apt-get install collectd
+$ sudo /etc/init.d/collectd start
+
+
+
+

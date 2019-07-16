@@ -1,0 +1,101 @@
+{% extends "admin_lte/index.html" %}
+
+{% block static_head %}
+	<link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+{% endblock %}
+
+{% block content %}
+          <div class="box">
+            <div class="box-header">
+              <span><h3 class="box-title">Bac à événements</h3></span>
+              <form class="form-inline" method="post" action="{{ filtering_url }}">
+                <div class="form-group">
+                  <label for="input_number_items">Nombre d'élément par page</label>
+                  <select name ="number_items" class="form-control select2">      	
+			            {% for value in list_number_items %}
+			        		<option value = "{{value}}" {% if number_items == value %} selected="selected" {% endif %}>{{value}}</option>
+			        	{% endfor %}   
+			      </select>
+			    </div>
+			    <div class="form-group">
+			      <label for="input_event_type">Type d'événement</label> 
+			      <select name ="event_type" id="input_event_type" class="form-control select2">      	
+			        	{% for key,value in list_event_type.iteritems()  %}
+			        		<option value = "{{key}}" {% if event_type == key %} selected="selected" {% endif %}>{{value}}</option>
+			        	{% endfor %}
+			      </select>
+			    </div>
+			      <button type="submit" class="btn btn-info">Valider</button>
+              </form>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="list_consoles" class="table table-bordered table-striped">
+                <thead>
+	                <tr>
+	                  <th>Nom d'hôte</th>
+	                  <th>Famille des composant</th>
+	                  <th>Composant concret</th>
+	                  <th>Métrique</th>
+	                  <th>Point d'observation</th>
+	                  <th>Valeur</th>
+	                  <th>Type d'événement</th>
+	                  <th>Date</th>
+	                  <th></th>
+	                </tr>
+                </thead>
+                <tbody>
+                	{% for event in events %}
+		                <tr>
+		                  <td>{{event.host}}</td>
+		                  <td>{{event.plugin}}</td>
+		                  <td>{{event.plugin_instance}}</td>
+		                  <td>{{event.metric_instance}}</td>
+		                  <td>{{event.type_instance}}</td>
+		                  <td>{{event.value}}</td>
+		                  <td>{{event.event_type}}</td>
+		                  <td>{{event.date}}</td>
+		                  <td>
+							<a role="button" class="btn btn-danger" href="{{ url_for('metric_urls.delete_metric_handler', id_event=event.id) }}" onclick="return confirm ('Voulez-vous vraiment supprimer cette élément ?'); "><span class="glyphicon glyphicon-trash" aria-hidden="true">Supprimer</span></a>
+						  </td>
+		                </tr>
+		            {% endfor %}
+		             
+                </tbody>
+                <tfoot>
+ 					<tr>
+	                  <th>Nom d'hôte</th>
+	                  <th>Famille des composant</th>
+	                  <th>Composant concret</th>
+	                  <th>Métrique</th>
+	                  <th>Point d'observation</th>
+	                  <th>Valeur</th>
+	                  <th>Type de métrique</th>
+	                  <th>Date</th>
+	                  <th></th>
+	                </tr>
+                </tfoot>
+              </table>
+	              	{% if page > 1 %}
+	   					<a role="button" class="btn btn-danger" href="{{ url_for('metric_urls.list_metric_handler', number_items = number_items, event_type = event_type, page = previous_page) }}"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true">Précédent</span></a>
+  					{% endif %}
+                		<a role="button" class="btn btn-danger" href="{{ url_for('metric_urls.list_metric_handler', number_items = number_items, event_type = event_type, page = next_page) }}"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true">Suivant</span></a> 	
+            </div>
+            <!-- /.box-body -->
+          </div>
+        
+{% endblock %}
+
+{% block js_footer %}
+
+<script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
+	<script>
+	  $(function () {
+	    $("#list_consoles").DataTable();
+	  });
+	</script>
+
+{% endblock %}
